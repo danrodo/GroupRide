@@ -11,9 +11,9 @@ import UIKit
 import CloudKit
 
 struct RideEvent {
-    let location: String
-    let date: Date
-    let description: String
+    var location: String
+    var date: Date
+    var description: String
     
     var cloudKitRecordID: CKRecordID? 
     

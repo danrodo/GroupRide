@@ -14,6 +14,8 @@
 		5FBF06601F9D60400055B53C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF065F1F9D60400055B53C /* User.swift */; };
 		5FBF06621F9D611E0055B53C /* RideEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06611F9D611E0055B53C /* RideEvent.swift */; };
 		5FBF06651F9D61EE0055B53C /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06641F9D61EE0055B53C /* Keys.swift */; };
+		5FBF06671F9E4BF20055B53C /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06661F9E4BF20055B53C /* UserController.swift */; };
+		5FBF06691F9E4DAC0055B53C /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06681F9E4DAC0055B53C /* CloudKitManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,8 @@
 		5FBF065F1F9D60400055B53C /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5FBF06611F9D611E0055B53C /* RideEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideEvent.swift; sourceTree = "<group>"; };
 		5FBF06641F9D61EE0055B53C /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
+		5FBF06661F9E4BF20055B53C /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
+		5FBF06681F9E4DAC0055B53C /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +114,7 @@
 		5FBF065C1F9D600F0055B53C /* Model Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5FBF06661F9E4BF20055B53C /* UserController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				5FBF06641F9D61EE0055B53C /* Keys.swift */,
+				5FBF06681F9E4DAC0055B53C /* CloudKitManager.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -218,6 +224,8 @@
 			files = (
 				5FBF06601F9D60400055B53C /* User.swift in Sources */,
 				5FBF06651F9D61EE0055B53C /* Keys.swift in Sources */,
+				5FBF06691F9E4DAC0055B53C /* CloudKitManager.swift in Sources */,
+				5FBF06671F9E4BF20055B53C /* UserController.swift in Sources */,
 				5FBF06621F9D611E0055B53C /* RideEvent.swift in Sources */,
 				5FBF06441F9D5FCD0055B53C /* AppDelegate.swift in Sources */,
 			);
