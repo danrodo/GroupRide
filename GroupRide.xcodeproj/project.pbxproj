@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F13D2581F9FB90A003CCA63 /* RideEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13D2571F9FB90A003CCA63 /* RideEventController.swift */; };
 		5FBF06441F9D5FCD0055B53C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06431F9D5FCD0055B53C /* AppDelegate.swift */; };
 		5FBF06491F9D5FCD0055B53C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF06471F9D5FCD0055B53C /* Main.storyboard */; };
 		5FBF064B1F9D5FCD0055B53C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF064A1F9D5FCD0055B53C /* Assets.xcassets */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F13D2571F9FB90A003CCA63 /* RideEventController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideEventController.swift; sourceTree = "<group>"; };
 		5FBF06401F9D5FCD0055B53C /* GroupRide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupRide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF06431F9D5FCD0055B53C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5FBF06481F9D5FCD0055B53C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				5FBF06661F9E4BF20055B53C /* UserController.swift */,
+				5F13D2571F9FB90A003CCA63 /* RideEventController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -246,6 +249,7 @@
 				5FBF06621F9D611E0055B53C /* RideEvent.swift in Sources */,
 				5FBF06441F9D5FCD0055B53C /* AppDelegate.swift in Sources */,
 				5FBF066D1F9E78E70055B53C /* NewUserViewController.swift in Sources */,
+				5F13D2581F9FB90A003CCA63 /* RideEventController.swift in Sources */,
 				5FBF06731F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift in Sources */,
 				5FBF066F1F9E8C9D0055B53C /* InitialViewController.swift in Sources */,
 			);

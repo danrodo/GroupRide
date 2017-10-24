@@ -21,6 +21,8 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     @IBOutlet weak var profilePictureImageView: UIImageView!
     @IBOutlet weak var selectPhotoButton: UIButton!
     
+    @IBOutlet weak var saveButtonTopSpaceCOnstraint: NSLayoutConstraint!
+    
     // MARK: - View Controller life cycle functions
 
     override func viewDidLoad() {
@@ -46,8 +48,6 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     @IBAction func selectPhotoButtonTapped(_ sender: Any) {
         
         presentPicker()
-        profilePictureImageView.alpha = 1.0
-        selectPhotoButton.setTitle("", for: .normal)
         
     }
     
@@ -69,14 +69,21 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
             profilePicture = #imageLiteral(resourceName: "bike_icon")
         }
         
+        
         let photoData = UIImagePNGRepresentation(profilePicture)
         
+        let myStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let feedTableViewController = myStoryboard.instantiateViewController(withIdentifier: "FeedTableViewController")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        
         let _ = UserController.shared.createUser(firstName: firstName, lastName: lastName, photoData: photoData) { (success) in
-            if !success {
-                self.presentSimpleAlert(title: "Unable to save your info", message: "There was an issue connecting to GroupRide's data store, try again when you have service")
+            DispatchQueue.main.async {
+                if !success {
+                    self.presentSimpleAlert(title: "Unable to save your info", message: "There was an issue connecting to GroupRide's data store, try again when you have service")
+                }
+                appDelegate.window?.rootViewController = feedTableViewController
+                
             }
-            self.performSegue(withIdentifier: "logInToFeedSegue", sender: self)
-            return
         }
     }
     
@@ -109,16 +116,19 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     // MARK: - image picker Delegate functions
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         
         profilePicture = chosenImage
         profilePictureImageView.image = chosenImage
-        
+        DispatchQueue.main.async {
+            self.profilePictureImageView.alpha = 1.0
+            self.selectPhotoButton.setTitle("", for: .normal)
+        }
         dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
     }
     
@@ -131,9 +141,7 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        
-        
+
     }
     
     // MARK: - Error handeling views
@@ -146,7 +154,6 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         self.present(alert, animated: true, completion: nil)
         self.firstNameTextField.text = "Enter first name here..."
         self.lastNameTextField.text = "Enter last name here..."
-        
     }
     
     // MARK: - Handle keyboard interaction
@@ -154,11 +161,42 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     // FIXME: - implement
     
     @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
+            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
+            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
+        
+       
+        self.view.layoutIfNeeded()
+        self.saveButtonTopSpaceCOnstraint.constant = 40.0
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(animationDuration)
+        UIView.setAnimationCurve(animationCurve)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        
+        self.view.layoutIfNeeded()
+        UIView.commitAnimations()
         
     }
     
     @objc func keyboardWillHide(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
+            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
+            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
         
+        
+        self.view.layoutIfNeeded()
+        self.saveButtonTopSpaceCOnstraint.constant = 90.0
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(animationDuration)
+        UIView.setAnimationCurve(animationCurve)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        
+        self.view.layoutIfNeeded()
+        UIView.commitAnimations()
+        
+
     }
 
 }

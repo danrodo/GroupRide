@@ -18,6 +18,7 @@ struct UserKeys {
     static let photoDataKey = "photoData"
     static let appleUserRefKey = "appleUserReference"
     static let recordTypeKey = "User"
+    static let assetKey = "asset"
     
     // MARK: - Notification
     
@@ -33,5 +34,11 @@ struct RideEventKeys {
     static let locationKey = "location"
     static let dateKey = "date"
     static let descriptionKey = "description"
+    static let recordTypeKey = "RideEvent"
+    static let userRefKey = "userRef"
+    
+    // MARK: - Notification
+    
+    static let rideEventFeedWasSetNotification = Notification.Name("rideEventFeedWasSet")
     
 }

@@ -20,25 +20,24 @@ class LaunchScreenCopyViewController: UIViewController {
         let feedTableViewController = myStoryboard.instantiateViewController(withIdentifier: "FeedTableViewController")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        if checkForCurrentUser() == false {
-            appDelegate.window?.rootViewController = initialViewController
-        } else {
-            appDelegate.window?.rootViewController = feedTableViewController
+        checkForCurrentUser { (success) in
+            DispatchQueue.main.async {
+                if !success {
+                    appDelegate.window?.rootViewController = initialViewController
+                } else {
+                    appDelegate.window?.rootViewController = feedTableViewController
+                }
+            }
+
         }
     }
     
     // MARK: - Private functions
     
-    func checkForCurrentUser() -> Bool {
-        var isSuccess = false
+    func checkForCurrentUser(completion: @escaping (Bool) -> Void) {
+        
         let _ = UserController.shared.fetchCurrentUser(completion: { (success) in
-            if !success {
-                isSuccess = false
-                return
-            }
-            isSuccess = true
-            return
+            completion(success)
         })
-        return isSuccess
     }
 }

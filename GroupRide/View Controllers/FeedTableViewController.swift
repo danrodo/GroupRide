@@ -9,10 +9,20 @@
 import UIKit
 
 class FeedTableViewController: UITableViewController {
-
+    
+    // MARK: - Properties
+    
+    @IBOutlet weak var firstNameLabel: UILabel!
+    @IBOutlet weak var lastNamelabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var profilePictureImageView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        firstNameLabel.text = UserController.shared.currentUser?.firstName
+        lastNamelabel.text = UserController.shared.currentUser?.lastName
+        profilePictureImageView.image = UserController.shared.currentUser?.photo
     }
 
     // MARK: - Table view data source

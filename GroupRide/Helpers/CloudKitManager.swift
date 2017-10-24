@@ -52,6 +52,13 @@ class CloudKitManager {
         
         self.publicDatabase.add(queryOperation)
     }
+    
+    func save(_ record: CKRecord, completion: @escaping ((Error?) -> Void) = { _ in }) {
+        
+        publicDatabase.save(record) { (record, error) in
+            completion(error)
+        }
+    }
 }
 
 
