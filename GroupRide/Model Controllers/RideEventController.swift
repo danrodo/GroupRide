@@ -11,7 +11,7 @@ import CloudKit
 
 class RideEventController {
     
-    static let shared = UserController()
+    static let shared = RideEventController()
     
     let cloudKitManager: CloudKitManager = {
         return CloudKitManager()
@@ -29,8 +29,13 @@ class RideEventController {
         refreshData()
     }
     
-    func create(rideEvent: RideEvent, completion: @escaping ((Error?) -> Void) = { _ in }) {
+    func create(location: String, date: Date, description: String, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
+        guard let currentUser = UserController.shared.currentUser, let cloudKitRecordID = currentUser.cloudKitRecordID else { return }
+        let userRef = CKReference(recordID: cloudKitRecordID, action: .deleteSelf)
+        
+        
+        let rideEvent = RideEvent(location: location, date: date, description: description, userRef: userRef)
         let record = CKRecord(rideEvent: rideEvent)
         
         cloudKitManager.save(record) { (error) in

@@ -19,23 +19,38 @@ class FeedTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(ridesWereSet), name: RideEventKeys.rideEventFeedWasSetNotification, object: nil)
         
         firstNameLabel.text = UserController.shared.currentUser?.firstName
         lastNamelabel.text = UserController.shared.currentUser?.lastName
         profilePictureImageView.image = UserController.shared.currentUser?.photo
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        tableView.reloadData()
+    }
 
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        guard let rides = RideEventController.shared.rideList else { return 0 }
+        return rides.count
     }
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "rideCell", for: indexPath)
 
-        // Configure the cell...
+        guard let rides = RideEventController.shared.rideList else { return UITableViewCell() }
+        let ride = rides[indexPath.row]
+        
+        cell.textLabel?.text = ride.description
 
         return cell
     }
@@ -51,6 +66,14 @@ class FeedTableViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
+    }
+    
+    // MARK: - Private helper funcs
+    
+    @objc func ridesWereSet() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
  
 

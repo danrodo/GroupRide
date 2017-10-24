@@ -25,6 +25,7 @@ class LaunchScreenCopyViewController: UIViewController {
                 if !success {
                     appDelegate.window?.rootViewController = initialViewController
                 } else {
+                    RideEventController.shared.refreshData()
                     appDelegate.window?.rootViewController = feedTableViewController
                 }
             }
