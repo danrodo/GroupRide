@@ -20,13 +20,17 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     @IBOutlet weak var profilePictureImageView: UIImageView!
     @IBOutlet weak var selectPhotoButton: UIButton!
+    @IBOutlet weak var saveButton: UIButton!
     
     @IBOutlet weak var saveButtonTopSpaceCOnstraint: NSLayoutConstraint!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: - View Controller life cycle functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        saveButton.isEnabled = true
+        activityIndicator.isHidden = true
         
         // textField setup
         firstNameTextField.delegate = self
@@ -53,6 +57,8 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     @IBAction func saveButtonTapped(_ sender: Any) {
         
+        saveButton.isEnabled = false
+        
         guard let firstName = firstNameTextField.text, let lastName = lastNameTextField.text else {
             self.presentSimpleAlert(title: "Unable to save your info", message: "Please check that you filled everything in correctly")
             return
@@ -76,13 +82,17 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         let feedTableViewController = myStoryboard.instantiateViewController(withIdentifier: "FeedTableViewController")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        
         let _ = UserController.shared.createUser(firstName: firstName, lastName: lastName, photoData: photoData) { (success) in
             DispatchQueue.main.async {
                 if !success {
                     self.presentSimpleAlert(title: "Unable to save your info", message: "There was an issue connecting to GroupRide's data store, try again when you have service")
                 }
                 appDelegate.window?.rootViewController = feedTableViewController
-                
+                self.activityIndicator.isHidden = true
+                self.activityIndicator.stopAnimating()
             }
         }
     }
@@ -137,12 +147,6 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = ""
     }
-
-    // MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
-    }
     
     // MARK: - Error handeling views
     
@@ -154,6 +158,8 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         self.present(alert, animated: true, completion: nil)
         self.firstNameTextField.text = "Enter first name here..."
         self.lastNameTextField.text = "Enter last name here..."
+        
+        self.saveButton.isEnabled = true
     }
     
     // MARK: - Handle keyboard interaction

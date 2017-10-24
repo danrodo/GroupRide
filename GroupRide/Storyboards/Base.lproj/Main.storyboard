@@ -276,6 +276,7 @@
                         <outlet property="datePicker" destination="4r6-I3-P3X" id="txI-0c-cpR"/>
                         <outlet property="descriptionTextArea" destination="fXI-KD-BQX" id="YLi-Sw-D7O"/>
                         <outlet property="locationTextField" destination="PKW-rl-lKd" id="j3f-zS-bmQ"/>
+                        <outlet property="saveButtonToTextAreaConstraint" destination="0zT-ei-2td" id="ZJG-m5-kIj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5HM-gU-dyz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -333,9 +334,14 @@
                                     <action selector="selectPhotoButtonTapped:" destination="3zJ-Gd-Ql5" eventType="touchUpInside" id="c5i-tJ-EQG"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="o8H-lk-Ybq">
+                                <rect key="frame" x="169" y="71" width="37" height="37"/>
+                                <color key="color" red="0.99963909390000005" green="1" blue="0.99975615740000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="0.0024882087018340826" green="0.56642240285873413" blue="0.0026179158594459295" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="o8H-lk-Ybq" firstAttribute="top" secondItem="13o-2R-AmA" secondAttribute="top" constant="7" id="2L4-ZM-eb7"/>
                             <constraint firstItem="13o-2R-AmA" firstAttribute="trailing" secondItem="Vo5-QR-wlQ" secondAttribute="trailing" constant="30" id="488-eS-Cc7"/>
                             <constraint firstItem="4ah-OT-1rQ" firstAttribute="centerX" secondItem="ilP-Az-2I0" secondAttribute="centerX" id="4Vf-13-W8h"/>
                             <constraint firstItem="13o-2R-AmA" firstAttribute="trailing" secondItem="rv3-cc-mSK" secondAttribute="trailing" constant="30" id="5wo-SY-23D"/>
@@ -349,6 +355,8 @@
                             <constraint firstItem="4ah-OT-1rQ" firstAttribute="top" secondItem="DRY-mY-ZU4" secondAttribute="top" id="Ocz-6Y-48I"/>
                             <constraint firstItem="rv3-cc-mSK" firstAttribute="leading" secondItem="13o-2R-AmA" secondAttribute="leading" constant="30" id="Pf4-tA-6Yf"/>
                             <constraint firstItem="4ah-OT-1rQ" firstAttribute="top" secondItem="fUy-0T-EYR" secondAttribute="top" id="Rpp-Cq-lfS"/>
+                            <constraint firstItem="o8H-lk-Ybq" firstAttribute="leading" secondItem="13o-2R-AmA" secondAttribute="leading" constant="169" id="Uat-gI-JRi"/>
+                            <constraint firstItem="13o-2R-AmA" firstAttribute="trailing" secondItem="o8H-lk-Ybq" secondAttribute="trailing" constant="169" id="eQ1-5a-fle"/>
                             <constraint firstItem="DRY-mY-ZU4" firstAttribute="leading" secondItem="13o-2R-AmA" secondAttribute="leading" constant="117" id="gb6-Ms-6sH"/>
                             <constraint firstItem="DRY-mY-ZU4" firstAttribute="centerX" secondItem="ilP-Az-2I0" secondAttribute="centerX" id="iIw-SI-YUL"/>
                             <constraint firstItem="fUy-0T-EYR" firstAttribute="centerX" secondItem="ilP-Az-2I0" secondAttribute="centerX" id="ny3-zM-7jv"/>
@@ -359,9 +367,11 @@
                         <viewLayoutGuide key="safeArea" id="13o-2R-AmA"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="o8H-lk-Ybq" id="3fI-nr-B0T"/>
                         <outlet property="firstNameTextField" destination="Vo5-QR-wlQ" id="htl-jR-D27"/>
                         <outlet property="lastNameTextField" destination="rv3-cc-mSK" id="8wZ-eb-FrW"/>
                         <outlet property="profilePictureImageView" destination="DRY-mY-ZU4" id="8i6-D9-1MU"/>
+                        <outlet property="saveButton" destination="T8A-fM-rNZ" id="HPZ-cH-tj6"/>
                         <outlet property="saveButtonTopSpaceCOnstraint" destination="Gii-Oh-6Cp" id="9ZR-Z2-3X5"/>
                         <outlet property="selectPhotoButton" destination="fUy-0T-EYR" id="GEx-SE-jEl"/>
                     </connections>

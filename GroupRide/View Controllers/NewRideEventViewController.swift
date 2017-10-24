@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewRideEventViewController: UIViewController {
+class NewRideEventViewController: UIViewController, UITextViewDelegate {
     
     
     // MARK: - Properties
@@ -16,6 +16,8 @@ class NewRideEventViewController: UIViewController {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var descriptionTextArea: UITextView!
+    
+    @IBOutlet weak var saveButtonToTextAreaConstraint: NSLayoutConstraint!
     
     // MARK: - Actions
     
@@ -39,17 +41,60 @@ class NewRideEventViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        descriptionTextArea.delegate = self
+        
+        // create notification observers for when keyboard is shown and when it is dismissed
+        // to adjust constraints
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: .UIKeyboardWillShow, object: nil)
+        nc.addObserver(self, selector: #selector(keyboardWillHide(_ :)), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    // MARK: - TextView delegate funcs 
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        textView.text = ""
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // MARK: - Handle keyboard interaction
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
+            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
+            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
+        
+        
+        self.view.layoutIfNeeded()
+        self.saveButtonToTextAreaConstraint.constant = 25.0
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(animationDuration)
+        UIView.setAnimationCurve(animationCurve)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        
+        self.view.layoutIfNeeded()
+        UIView.commitAnimations()
+        
     }
-    */
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
+            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
+            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
+        
+        
+        self.view.layoutIfNeeded()
+        self.saveButtonToTextAreaConstraint.constant = 45.0
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(animationDuration)
+        UIView.setAnimationCurve(animationCurve)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        
+        self.view.layoutIfNeeded()
+        UIView.commitAnimations()
+        
+        
+    }
 
 }
