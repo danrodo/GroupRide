@@ -16,6 +16,11 @@
 		5FBF06651F9D61EE0055B53C /* Keys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06641F9D61EE0055B53C /* Keys.swift */; };
 		5FBF06671F9E4BF20055B53C /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06661F9E4BF20055B53C /* UserController.swift */; };
 		5FBF06691F9E4DAC0055B53C /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06681F9E4DAC0055B53C /* CloudKitManager.swift */; };
+		5FBF066B1F9E6A290055B53C /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBF066A1F9E6A290055B53C /* CloudKit.framework */; };
+		5FBF066D1F9E78E70055B53C /* NewUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF066C1F9E78E70055B53C /* NewUserViewController.swift */; };
+		5FBF066F1F9E8C9D0055B53C /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */; };
+		5FBF06711F9E8CE30055B53C /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */; };
+		5FBF06731F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06721F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +36,11 @@
 		5FBF06641F9D61EE0055B53C /* Keys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keys.swift; sourceTree = "<group>"; };
 		5FBF06661F9E4BF20055B53C /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		5FBF06681F9E4DAC0055B53C /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
+		5FBF066A1F9E6A290055B53C /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		5FBF066C1F9E78E70055B53C /* NewUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewUserViewController.swift; sourceTree = "<group>"; };
+		5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
+		5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
+		5FBF06721F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenCopyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBF066B1F9E6A290055B53C /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +91,7 @@
 		5FBF06561F9D5FD50055B53C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5FBF066A1F9E6A290055B53C /* CloudKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -129,6 +141,10 @@
 		5FBF065E1F9D602B0055B53C /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				5FBF06721F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift */,
+				5FBF066C1F9E78E70055B53C /* NewUserViewController.swift */,
+				5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */,
+				5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -226,8 +242,12 @@
 				5FBF06651F9D61EE0055B53C /* Keys.swift in Sources */,
 				5FBF06691F9E4DAC0055B53C /* CloudKitManager.swift in Sources */,
 				5FBF06671F9E4BF20055B53C /* UserController.swift in Sources */,
+				5FBF06711F9E8CE30055B53C /* FeedTableViewController.swift in Sources */,
 				5FBF06621F9D611E0055B53C /* RideEvent.swift in Sources */,
 				5FBF06441F9D5FCD0055B53C /* AppDelegate.swift in Sources */,
+				5FBF066D1F9E78E70055B53C /* NewUserViewController.swift in Sources */,
+				5FBF06731F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift in Sources */,
+				5FBF066F1F9E8C9D0055B53C /* InitialViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

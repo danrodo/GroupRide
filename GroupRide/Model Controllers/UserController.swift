@@ -28,12 +28,12 @@ class UserController {
     
     // MARK: - Create User with custom properties
     
-    func createUser(firstName: String, lastName: String, profilePicture: UIImage, completion: @escaping (_ success: Bool) -> Void) {
+    func createUser(firstName: String, lastName: String, photoData: Data?, completion: @escaping (_ success: Bool) -> Void) {
         CKContainer.default().fetchUserRecordID { (appleUsersRecordID, error) in
             guard let appleUsersRecordID = appleUsersRecordID else { return }
             
             let appleUserRef = CKReference(recordID: appleUsersRecordID, action: .deleteSelf)
-            let user = User(firstName: firstName, lastName: lastName, appleUserRef: appleUserRef, profilePicture: profilePicture)
+            let user = User(firstName: firstName, lastName: lastName, appleUserRef: appleUserRef, photoData: photoData)
             
             let userRecord = CKRecord(user: user)
             
@@ -65,10 +65,11 @@ class UserController {
             
             let appleUserReference = CKReference(recordID: appleUserRecordID, action: .deleteSelf)
             
-            let predicate = NSPredicate(format: "appleUserRef == %@", appleUserReference)
+            let predicate = NSPredicate(format: "appleUserReference == %@", appleUserReference)
             
             self.cloudKitManager.fetchRecordsWithType(UserKeys.recordTypeKey, predicate: predicate, recordFetchedBlock: nil, completion: { (records, error) in
                 if let error = error {
+                    completion(false)
                     print(error.localizedDescription)
                 }
                 guard let currentUserRecord = records?.first else {

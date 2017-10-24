@@ -15,7 +15,7 @@ struct UserKeys {
     
     static let firstNameKey = "firstName"
     static let lastNameKey = "lastName"
-    static let profilePictureKey = "profilePicture"
+    static let photoDataKey = "photoData"
     static let appleUserRefKey = "appleUserReference"
     static let recordTypeKey = "User"
     

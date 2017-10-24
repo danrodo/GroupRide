@@ -13,15 +13,20 @@ import CloudKit
 struct User {
     var firstName: String
     var lastName: String
-    var profilePicture: UIImage?
+    var photoData: Data?
     
     var cloudKitRecordID: CKRecordID?
     var appleUserReference: CKReference
     
-    init(firstName: String, lastName: String, appleUserRef: CKReference, profilePicture: UIImage) {
+    var photo: UIImage? {
+        guard let photoData = self.photoData else { return nil }
+        return UIImage(data: photoData)
+    }
+    
+    init(firstName: String, lastName: String, appleUserRef: CKReference, photoData: Data?) {
         self.firstName = firstName
         self.lastName = lastName
-        self.profilePicture = profilePicture
+        self.photoData = photoData
         self.appleUserReference = appleUserRef
     }
 }
@@ -34,12 +39,12 @@ extension User {
         
         guard let firstName = cloudKitRecord[UserKeys.firstNameKey] as? String,
             let lastName = cloudKitRecord[UserKeys.lastNameKey] as? String,
-            let profilePicture = cloudKitRecord[UserKeys.profilePictureKey] as? UIImage,
+            let photoData = cloudKitRecord[UserKeys.photoDataKey] as? Data?,
             let appleUserRef = cloudKitRecord[UserKeys.appleUserRefKey] as? CKReference else { return nil }
         
         self.firstName = firstName
         self.lastName = lastName
-        self.profilePicture = profilePicture
+        self.photoData = photoData
         self.appleUserReference = appleUserRef
     }
 }
@@ -55,7 +60,7 @@ extension CKRecord {
         
         self.setValue(user.firstName, forKey: UserKeys.firstNameKey)
         self.setValue(user.lastName, forKey: UserKeys.lastNameKey)
-        self.setValue(user.profilePicture, forKey: UserKeys.profilePictureKey)
+        self.setValue(user.photoData, forKey: UserKeys.photoDataKey)
         self.setValue(user.appleUserReference, forKey: UserKeys.appleUserRefKey)
     }
 }
