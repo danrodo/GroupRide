@@ -24,17 +24,24 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     @IBOutlet weak var saveButtonTopSpaceCOnstraint: NSLayoutConstraint!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var blockActionView: UIView!
     
     // MARK: - View Controller life cycle functions
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        blockActionView.isHidden = true
+        
         saveButton.isEnabled = true
         activityIndicator.isHidden = true
         
         // textField setup
         firstNameTextField.delegate = self
         lastNameTextField.delegate = self
+        
+        firstNameTextField.layer.cornerRadius = 15
+        lastNameTextField.layer.cornerRadius = 15
         
         // ImagePicker settup
         picker.delegate = self
@@ -50,9 +57,7 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     // MARK: - Actions
     
     @IBAction func selectPhotoButtonTapped(_ sender: Any) {
-        
         presentPicker()
-        
     }
     
     @IBAction func saveButtonTapped(_ sender: Any) {
@@ -82,15 +87,18 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         let feedTableViewController = myStoryboard.instantiateViewController(withIdentifier: "FeedTableViewController")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
+        blockActionView.isHidden = false
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
         
         let _ = UserController.shared.createUser(firstName: firstName, lastName: lastName, photoData: photoData) { (success) in
             DispatchQueue.main.async {
                 if !success {
+                    self.blockActionView.isHidden = true
                     self.presentSimpleAlert(title: "Unable to save your info", message: "There was an issue connecting to GroupRide's data store, try again when you have service")
                 }
                 appDelegate.window?.rootViewController = feedTableViewController
+                self.blockActionView.isHidden = true
                 self.activityIndicator.isHidden = true
                 self.activityIndicator.stopAnimating()
             }
@@ -115,12 +123,15 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
             self.present(self.picker, animated: true, completion: nil)
         }
         
+        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+        
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             pickerAlert.addAction(cameraAction)
         }
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             pickerAlert.addAction(photoLibraryAction)
         }
+        pickerAlert.addAction(cancelAction)
         present(pickerAlert, animated: true, completion: nil)
     }
     
@@ -146,6 +157,16 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.text = ""
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text == "" {
+            if textField == firstNameTextField {
+                textField.text = "Enter first name here..."
+            } else {
+                textField.text = "Enter last name here..."
+            }
+        }
     }
     
     // MARK: - Error handeling views

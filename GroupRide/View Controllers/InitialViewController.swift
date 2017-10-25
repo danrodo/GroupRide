@@ -17,12 +17,6 @@ class InitialViewController: UIViewController {
     }
 
 
-    // MARK: - Navigation
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        
-    }
   
 
 }

@@ -10,7 +10,9 @@ import UIKit
 
 class LaunchScreenCopyViewController: UIViewController {
     
-    // FIXME : custom segues broken
+    let cloudKitManager: CloudKitManager = {
+        return CloudKitManager()
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()

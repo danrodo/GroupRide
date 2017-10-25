@@ -59,6 +59,27 @@ class CloudKitManager {
             completion(error)
         }
     }
+    
+    func fetchRideOwners() {
+        
+        var recordIDs: [CKRecordID] = []
+        guard let rideList = RideEventController.shared.rideList else { return }
+        _ = rideList.flatMap({ recordIDs.append($0.userRef.recordID) })
+        
+        let fetchOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
+        fetchOperation.fetchRecordsCompletionBlock = { (recordsByRecordID, error) in
+            // doesnt happen
+            guard let records = recordsByRecordID else { return }
+            for record in records {
+                guard let user = User(cloudKitRecord: record.value)
+                    else { return }
+                RideEventController.shared.userDict[record.key] = user
+                print("hi")
+            }
+//            _ = recordsByRecordID?.flatMap({ RideEventController.shared.userDict?[$0.key] = User(cloudKitRecord: $0.value) })
+        }
+        publicDatabase.add(fetchOperation)
+    }
 }
 
 

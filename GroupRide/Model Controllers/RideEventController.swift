@@ -1,4 +1,4 @@
-//
+            //
 //  RideEventController.swift
 //  GroupRide
 //
@@ -19,6 +19,13 @@ class RideEventController {
     
     var rideList: [RideEvent]? {
         didSet{
+            
+            self.cloudKitManager.fetchRideOwners()
+        }
+    }
+    
+    var userDict: [CKRecordID: User] = [:] {
+        didSet{
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: RideEventKeys.rideEventFeedWasSetNotification, object: nil)
             }
@@ -26,7 +33,7 @@ class RideEventController {
     }
     
     init() {
-        refreshData()
+//        refreshData()
     }
     
     func create(location: String, date: Date, description: String, completion: @escaping ((Error?) -> Void) = { _ in }) {

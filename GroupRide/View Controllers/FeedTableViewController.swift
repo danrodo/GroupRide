@@ -45,27 +45,36 @@ class FeedTableViewController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "rideCell", for: indexPath)
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "rideCell", for: indexPath) as? RideTableViewCell else { return RideTableViewCell() }
 
-        guard let rides = RideEventController.shared.rideList else { return UITableViewCell() }
+        guard let rides = RideEventController.shared.rideList else { return RideTableViewCell() }
         let ride = rides[indexPath.row]
         
-        cell.textLabel?.text = ride.description
+        cell.rideEvent = ride
 
         return cell
-    }
-
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
     }
 
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-
+        
+        // Retrueve the selected ride and the user that created the ride then send it to the detail VC
+        
+        if segue.identifier == "rideCellToDetailView" {
+            
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
+            
+            guard let rideEvents = RideEventController.shared.rideList else { return }
+            let rideEvent = rideEvents[indexPath.row]
+            
+            guard let user = RideEventController.shared.userDict[rideEvent.userRef.recordID] else { return }
+            guard let destinationVC = segue.destination as? RideEventDetailViewController else { return }
+            
+            destinationVC.rideEvent = rideEvent
+            destinationVC.user = user
+        }
+        
     }
     
     // MARK: - Private helper funcs

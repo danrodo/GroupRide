@@ -64,7 +64,7 @@ extension User {
         self.lastName = lastName
         self.photoData = photoData
         self.appleUserReference = appleUserRef
-        self.cloudKitRecordID = appleUserRef.recordID
+        self.cloudKitRecordID = cloudKitRecord.recordID
     }
 }
 

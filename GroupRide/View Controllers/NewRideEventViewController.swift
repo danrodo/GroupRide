@@ -43,6 +43,10 @@ class NewRideEventViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         descriptionTextArea.delegate = self
         
+        datePicker.minimumDate = Date()
+        descriptionTextArea.layer.cornerRadius = 10
+        
+        
         // create notification observers for when keyboard is shown and when it is dismissed
         // to adjust constraints
         let nc = NotificationCenter.default
@@ -54,6 +58,12 @@ class NewRideEventViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         textView.text = ""
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text == "" {
+            textView.text = "Enter description here..."
+        }
     }
 
     // MARK: - Handle keyboard interaction

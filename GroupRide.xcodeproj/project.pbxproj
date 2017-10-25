@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5F13D2581F9FB90A003CCA63 /* RideEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13D2571F9FB90A003CCA63 /* RideEventController.swift */; };
 		5F13D25A1F9FD454003CCA63 /* NewRideEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F13D2591F9FD454003CCA63 /* NewRideEventViewController.swift */; };
+		5F8582281FA1290500615599 /* RideEventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8582271FA1290500615599 /* RideEventDetailViewController.swift */; };
 		5FBF06441F9D5FCD0055B53C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06431F9D5FCD0055B53C /* AppDelegate.swift */; };
 		5FBF06491F9D5FCD0055B53C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF06471F9D5FCD0055B53C /* Main.storyboard */; };
 		5FBF064B1F9D5FCD0055B53C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FBF064A1F9D5FCD0055B53C /* Assets.xcassets */; };
@@ -23,11 +24,13 @@
 		5FBF066F1F9E8C9D0055B53C /* InitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */; };
 		5FBF06711F9E8CE30055B53C /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */; };
 		5FBF06731F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FBF06721F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift */; };
+		5FF57B201FA0E7E2009AF2C1 /* RideTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FF57B1F1FA0E7E2009AF2C1 /* RideTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5F13D2571F9FB90A003CCA63 /* RideEventController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideEventController.swift; sourceTree = "<group>"; };
 		5F13D2591F9FD454003CCA63 /* NewRideEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewRideEventViewController.swift; sourceTree = "<group>"; };
+		5F8582271FA1290500615599 /* RideEventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideEventDetailViewController.swift; sourceTree = "<group>"; };
 		5FBF06401F9D5FCD0055B53C /* GroupRide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroupRide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBF06431F9D5FCD0055B53C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5FBF06481F9D5FCD0055B53C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -45,6 +48,7 @@
 		5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewController.swift; sourceTree = "<group>"; };
 		5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		5FBF06721F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenCopyViewController.swift; sourceTree = "<group>"; };
+		5FF57B1F1FA0E7E2009AF2C1 /* RideTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RideTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +143,7 @@
 		5FBF065D1F9D60170055B53C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5FF57B1F1FA0E7E2009AF2C1 /* RideTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 				5FBF066E1F9E8C9D0055B53C /* InitialViewController.swift */,
 				5FBF06701F9E8CE30055B53C /* FeedTableViewController.swift */,
 				5F13D2591F9FD454003CCA63 /* NewRideEventViewController.swift */,
+				5F8582271FA1290500615599 /* RideEventDetailViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -244,6 +250,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F8582281FA1290500615599 /* RideEventDetailViewController.swift in Sources */,
 				5FBF06601F9D60400055B53C /* User.swift in Sources */,
 				5FBF06651F9D61EE0055B53C /* Keys.swift in Sources */,
 				5FBF06691F9E4DAC0055B53C /* CloudKitManager.swift in Sources */,
@@ -256,6 +263,7 @@
 				5F13D2581F9FB90A003CCA63 /* RideEventController.swift in Sources */,
 				5FBF06731F9E9C7B0055B53C /* LaunchScreenCopyViewController.swift in Sources */,
 				5FBF066F1F9E8C9D0055B53C /* InitialViewController.swift in Sources */,
+				5FF57B201FA0E7E2009AF2C1 /* RideTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
