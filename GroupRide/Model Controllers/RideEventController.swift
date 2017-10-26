@@ -19,7 +19,6 @@ class RideEventController {
     
     var rideList: [RideEvent]? {
         didSet{
-            
             self.cloudKitManager.fetchRideOwners()
         }
     }
@@ -32,18 +31,25 @@ class RideEventController {
         }
     }
     
-    init() {
-//        refreshData()
-    }
-    
     func create(location: String, date: Date, description: String, completion: @escaping ((Error?) -> Void) = { _ in }) {
         
-        guard let currentUser = UserController.shared.currentUser, let cloudKitRecordID = currentUser.cloudKitRecordID else { return }
+        guard var currentUser = UserController.shared.currentUser, let cloudKitRecordID = currentUser.cloudKitRecordID else { return }
         let userRef = CKReference(recordID: cloudKitRecordID, action: .deleteSelf)
         
         
         let rideEvent = RideEvent(location: location, date: date, description: description, userRef: userRef)
         let record = CKRecord(rideEvent: rideEvent)
+        
+        let rideRef = CKReference(record: record, action: .none)
+        currentUser.attendingRides.append(rideRef)
+        let userRecord = CKRecord(user: currentUser)
+        
+        cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
+            if let error = error {
+                NSLog("")
+                return
+            }
+        }
         
         cloudKitManager.save(record) { (error) in
             defer { completion(error) }

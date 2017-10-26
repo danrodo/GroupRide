@@ -14,7 +14,9 @@ struct User {
     var firstName: String
     var lastName: String
     
-    // Change to CKAsset
+    // array of references to rides
+    
+    var attendingRides: [CKReference]
     
     var photoData: Data?
     
@@ -39,11 +41,12 @@ struct User {
         return fileURL
     }
     
-    init(firstName: String, lastName: String, appleUserRef: CKReference, photoData: Data?) {
+    init(firstName: String, lastName: String, appleUserRef: CKReference, photoData: Data?, attendingRides: [CKReference]) {
         self.firstName = firstName
         self.lastName = lastName
         self.photoData = photoData
         self.appleUserReference = appleUserRef
+        self.attendingRides = attendingRides
     }
 }
 
@@ -65,6 +68,7 @@ extension User {
         self.photoData = photoData
         self.appleUserReference = appleUserRef
         self.cloudKitRecordID = cloudKitRecord.recordID
+        self.attendingRides = cloudKitRecord[UserKeys.attendingRidesKey] as? [CKReference] ?? []
     }
 }
 
@@ -84,6 +88,10 @@ extension CKRecord {
         self.setValue(asset, forKey: UserKeys.assetKey)
         self.setValue(user.appleUserReference, forKey: UserKeys.appleUserRefKey)
         
+        if user.attendingRides.count > 0 {
+            self.setValue(user.attendingRides, forKey: UserKeys.attendingRidesKey)
+
+        }
     }
 }
 

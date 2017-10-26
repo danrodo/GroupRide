@@ -60,7 +60,7 @@ class CloudKitManager {
         }
     }
     
-    func fetchRideOwners() {
+    func fetchRideOwners(completion: @escaping ((Error?) -> Void) = { _ in }) {
         
         var recordIDs: [CKRecordID] = []
         guard let rideList = RideEventController.shared.rideList else { return }
@@ -68,18 +68,33 @@ class CloudKitManager {
         
         let fetchOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
         fetchOperation.fetchRecordsCompletionBlock = { (recordsByRecordID, error) in
-            // doesnt happen
             guard let records = recordsByRecordID else { return }
             for record in records {
                 guard let user = User(cloudKitRecord: record.value)
                     else { return }
                 RideEventController.shared.userDict[record.key] = user
-                print("hi")
             }
-//            _ = recordsByRecordID?.flatMap({ RideEventController.shared.userDict?[$0.key] = User(cloudKitRecord: $0.value) })
         }
         publicDatabase.add(fetchOperation)
     }
+    
+    /// Takes is a single user and uses CKModyRecords Operation to save the CKRecord
+    func modifyRecords(_ records: [CKRecord], perRecordCompletion: ((_ record: CKRecord?, _ error: Error?) -> Void)?, completion: ((_ records: [CKRecord]?, _ error: Error?) -> Void)?) {
+        
+        let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+        operation.savePolicy = .changedKeys
+        operation.queuePriority = .high
+        operation.qualityOfService = .userInteractive
+        
+        operation.perRecordCompletionBlock = perRecordCompletion
+        
+        operation.modifyRecordsCompletionBlock = { (records, recordIDs, error) -> Void in
+            (completion?(records, error))!
+        }
+        
+        publicDatabase.add(operation)
+    }
+    
 }
 
 

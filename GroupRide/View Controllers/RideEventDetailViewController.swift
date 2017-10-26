@@ -28,6 +28,17 @@ class RideEventDetailViewController: UIViewController {
 
         updateViews()
     }
+    
+    // MARK: - Actions
+    
+    @IBAction func joinRideButtonTapped(_ sender: Any) {
+        
+        guard let rideEvent = rideEvent else { return }
+//        UserController.shared.joinRideEvent(rideEvent: rideEvent)
+        
+    }
+    
+    
 
     /*
     // MARK: - Navigation

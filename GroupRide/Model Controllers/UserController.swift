@@ -28,12 +28,12 @@ class UserController {
     
     // MARK: - Create User with custom properties
     
-    func createUser(firstName: String, lastName: String, photoData: Data?, completion: @escaping (_ success: Bool) -> Void) {
+    func createUser(firstName: String, lastName: String, photoData: Data?, attendingRides: [CKReference], completion: @escaping (_ success: Bool) -> Void) {
         CKContainer.default().fetchUserRecordID { (appleUsersRecordID, error) in
             guard let appleUsersRecordID = appleUsersRecordID else { return }
             
             let appleUserRef = CKReference(recordID: appleUsersRecordID, action: .deleteSelf)
-            let user = User(firstName: firstName, lastName: lastName, appleUserRef: appleUserRef, photoData: photoData)
+            let user = User(firstName: firstName, lastName: lastName, appleUserRef: appleUserRef, photoData: photoData, attendingRides: attendingRides)
             
             let userRecord = CKRecord(user: user)
             
@@ -82,6 +82,26 @@ class UserController {
             })
         }
     }
+    
+    func join(rideEvent: RideEvent, completion: @escaping ((Error?) -> Void) = { _ in }) {
+        
+        guard var currentUser = UserController.shared.currentUser, let recordID = rideEvent.cloudKitRecordID else { return }
+        
+        let rideReference = CKReference(recordID: recordID, action: .deleteSelf)
+        
+        currentUser.attendingRides.append(rideReference)
+        
+        
+//        self.cloudKitManager.modifyRecords(<#T##[CKRecord]#>, perRecordCompletion: <#T##((CKRecord?, Error?) -> Void)?##((CKRecord?, Error?) -> Void)?##(CKRecord?, Error?) -> Void#>, completion: <#T##(([CKRecord]?, Error?) -> Void)?##(([CKRecord]?, Error?) -> Void)?##([CKRecord]?, Error?) -> Void#>)
+        
+    }
+    
+//    func joinRideEvent(rideEvent: RideEvent, completion: @escaping (_ success: Bool) -> Void = { _ in }) {
+//
+//        self.cloudKitManager.join(rideEvent: rideEvent)
+//
+//        print("tryed to join or joined")
+//    }
 }
 
 
