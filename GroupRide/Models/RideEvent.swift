@@ -39,6 +39,7 @@ extension RideEvent {
         self.date = date
         self.description = description
         self.userRef = userRef
+        self.cloudKitRecordID = cloudKitRecord.recordID
     }
 }
 

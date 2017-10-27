@@ -13,6 +13,8 @@ class RideEventDetailViewController: UIViewController {
     var rideEvent: RideEvent?
     var user: User?
     
+    var attendingUsers: [User]?
+    
     // MARK: - Properties
     
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -22,11 +24,35 @@ class RideEventDetailViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
-
+    @IBOutlet weak var joinRideButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        guard let rideEvent = rideEvent, let user = UserController.shared.currentUser else { return }
+        
+        UserController.shared.fetchUsersAttending(rideEvent: rideEvent) { (users, success) in
+            if success {
+                self.attendingUsers = users
+            } else {
+                self.attendingUsers = [User]()
+            }
+        }
+        
+        if rideEvent.userRef.recordID == user.cloudKitRecordID {
+            // turn off join ride button
+            joinRideButton.isEnabled = false
+        } else {
+            // turn on join ride button
+            joinRideButton.isEnabled = true
+        }
+        
         updateViews()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        joinRideButton.isEnabled = true
     }
     
     // MARK: - Actions
@@ -34,8 +60,17 @@ class RideEventDetailViewController: UIViewController {
     @IBAction func joinRideButtonTapped(_ sender: Any) {
         
         guard let rideEvent = rideEvent else { return }
-//        UserController.shared.joinRideEvent(rideEvent: rideEvent)
-        
+        UserController.shared.join(rideEvent: rideEvent) { (error) in
+            if let error = error {
+                // handle error
+                NSLog("\(error.localizedDescription)")
+                return
+            }
+        }
+        DispatchQueue.main.async {
+            self.navigationController?.popViewController(animated: true)
+            self.joinRideButton.isEnabled = true
+        }
     }
     
     

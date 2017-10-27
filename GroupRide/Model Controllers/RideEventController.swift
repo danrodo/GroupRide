@@ -46,7 +46,7 @@ class RideEventController {
         
         cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
             if let error = error {
-                NSLog("")
+                NSLog("error joining ride when creating it, from ride even controller \(error.localizedDescription)")
                 return
             }
         }
