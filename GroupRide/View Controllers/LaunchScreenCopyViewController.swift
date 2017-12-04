@@ -22,17 +22,23 @@ class LaunchScreenCopyViewController: UIViewController {
         let feedTableViewController = myStoryboard.instantiateViewController(withIdentifier: "FeedTableViewController")
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        checkForCurrentUser { (success) in
-            DispatchQueue.main.async {
-                if !success {
-                    appDelegate.window?.rootViewController = initialViewController
-                } else {
-                    RideEventController.shared.refreshData()
-                    appDelegate.window?.rootViewController = feedTableViewController
+        cloudKitManager.checkCloudKitAvailability { (success) in
+            if !success {
+                NSLog("Could not check cloudKit availability")
+                return
+            }
+            self.checkForCurrentUser { (success) in
+                DispatchQueue.main.async {
+                    if !success {
+                        appDelegate.window?.rootViewController = initialViewController
+                    } else {
+                        RideEventController.shared.refreshData()
+                        appDelegate.window?.rootViewController = feedTableViewController
+                    }
                 }
             }
-
         }
+        
     }
     
     // MARK: - Private functions

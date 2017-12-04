@@ -28,6 +28,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow this app to use your current location</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Allow app to user camera to capture profile picture!</string>
 	<key>NSPhotoLibraryUsageDescription</key>

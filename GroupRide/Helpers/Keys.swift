@@ -43,3 +43,31 @@ struct RideEventKeys {
     static let rideEventFeedWasSetNotification = Notification.Name("rideEventFeedWasSet")
     
 }
+
+struct TrailKeys {
+    
+    static let apiKey = "200172211-9a083ff77555a96ca67e3ceed205300c"
+    static let baseUrl = "https://www.mtbproject.com/data/get-trails"
+    
+    static let idKey = "id"
+    static let nameKey = "name"
+    static let typeKey = "type"
+    static let summaryKey = "summary"
+    static let difficultyKey = "difficulty"
+    static let starsKey = "stars"
+    static let starVotesKey = "starVotes"
+    static let locationKey = "location"
+    static let urlKey = "url"
+    static let imageMediumKey = "imgMedium"
+    static let lengthKey = "length"
+    static let ascentKey = "ascent"
+    static let descentKey = "descent"
+    static let highKey = "high"
+    static let lowKey = "low"
+    static let longitudeKey = "longitude"
+    static let latitudeKey = "latitude"
+    static let conditionStatusKey = "conditionStatus"
+    static let conditionDetailsKey = "conditionDetails"
+    static let conditionDateKey = "conditionDate"
+    
+}

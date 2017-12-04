@@ -60,30 +60,28 @@ class RideEventDetailViewController: UIViewController {
     @IBAction func joinRideButtonTapped(_ sender: Any) {
         
         guard let rideEvent = rideEvent else { return }
-        UserController.shared.join(rideEvent: rideEvent) { (error) in
-            if let error = error {
+        UserController.shared.join(rideEvent: rideEvent) { (success) in
+            if !success {
                 // handle error
-                NSLog("\(error.localizedDescription)")
                 return
+            } else {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                    self.joinRideButton.isEnabled = true
+                }
             }
         }
-        DispatchQueue.main.async {
-            self.navigationController?.popViewController(animated: true)
-            self.joinRideButton.isEnabled = true
-        }
     }
-    
-    
-
-    /*
-    // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "attendingUsersSegue" {
+            
+            guard let users = attendingUsers, let destinationVC = segue.destination as? AttendingUsersTableViewController else { return }
+            destinationVC.users = users
+        }
     }
-    */
     
     // MARK: - initial view setup
     
@@ -99,5 +97,4 @@ class RideEventDetailViewController: UIViewController {
         descriptionLabel.text = rideEvent.description
         
     }
-
 }

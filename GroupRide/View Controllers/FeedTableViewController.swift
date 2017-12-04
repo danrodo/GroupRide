@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import CloudKit
+import CoreLocation
 
-class FeedTableViewController: UITableViewController {
+class FeedTableViewController: UITableViewController, CLLocationManagerDelegate {
     
     // MARK: - Properties
     
@@ -19,22 +21,19 @@ class FeedTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(ridesWereSet), name: RideEventKeys.rideEventFeedWasSetNotification, object: nil)
         
-        firstNameLabel.text = UserController.shared.currentUser?.firstName
-        lastNamelabel.text = UserController.shared.currentUser?.lastName
-        profilePictureImageView.image = UserController.shared.currentUser?.photo
+        setUpViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
         tableView.reloadData()
-        RideEventController.shared.refreshData { (_) in
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+//        RideEventController.shared.refreshData { (_) in
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
+//        }
     }
 
     // MARK: - Table view data source
@@ -54,6 +53,8 @@ class FeedTableViewController: UITableViewController {
 
         guard let rides = RideEventController.shared.rideList else { return RideTableViewCell() }
         let ride = rides[indexPath.row]
+        
+//        guard let currentUser = UserController.shared.currentUser else { return RideTableViewCell() }
         
         cell.rideEvent = ride
 
@@ -82,11 +83,64 @@ class FeedTableViewController: UITableViewController {
         
     }
     
+    func setUpViews() {
+        NotificationCenter.default.addObserver(self, selector: #selector(ridesWereSet), name: RideEventKeys.rideEventFeedWasSetNotification, object: nil)
+        
+        firstNameLabel.text = UserController.shared.currentUser?.firstName
+        lastNamelabel.text = UserController.shared.currentUser?.lastName
+        profilePictureImageView.image = UserController.shared.currentUser?.photo
+        
+        self.locationLabel.text = self.userLocation
+        
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyBest
+        manager.requestWhenInUseAuthorization()
+        manager.startUpdatingLocation()
+    }
+    
     // MARK: - Private helper funcs
     
     @objc func ridesWereSet() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
+        }
+    }
+    
+    let manager = CLLocationManager()
+    let geoCoder = CLGeocoder()
+    var userLocation = ""
+    var userLatitude: Double? = nil
+    var userLongitude: Double? = nil
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation = locations[0]
+        manager.startUpdatingLocation()
+
+        geoCoder.reverseGeocodeLocation(userLocation) { (placemarks, error) in
+            if error != nil {
+                print("Error in reveseGeocode")
+            }
+            guard let placemarks = placemarks else { return }
+            let placemark = placemarks as [CLPlacemark]
+            if placemark.count > 0 {
+                let placemark = placemarks[0]
+                guard let userLocal = placemark.locality else { return }
+                guard let lat = placemark.location?.coordinate.latitude else { return }
+                guard let lon = placemark.location?.coordinate.longitude else { return }
+                
+//                guard let timeZone = placemark.timeZone else { return }
+                
+                manager.stopUpdatingLocation()
+                
+                self.userLocation = userLocal
+                self.userLatitude = lat
+                self.userLongitude = lon
+                
+                DispatchQueue.main.async {
+                    self.locationLabel.text = userLocal
+                }
+                return
+            }
         }
     }
  

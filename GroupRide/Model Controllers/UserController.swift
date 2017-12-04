@@ -85,9 +85,9 @@ class UserController {
     
     // MARK: - Fetch all users attending a specified ride
     
-    // FIXME: - predicate is wrong
-    
     func fetchUsersAttending(rideEvent: RideEvent, completion: @escaping (_ attendingUsers: [User]?, _ success: Bool) -> Void = { _, _ in }) {
+        
+        
         
         guard let rideEventRecordID = rideEvent.cloudKitRecordID else { return }
         
@@ -105,24 +105,27 @@ class UserController {
             let users: [User] = records.flatMap { User(cloudKitRecord: $0) }
             completion(users, true)
         }
-        
-        
     }
     
-    func join(rideEvent: RideEvent, completion: @escaping ((Error?) -> Void) = { _ in }) {
+    // Check to see if a given ride event is being attended by the current user
+    
+    
+    
+    func join(rideEvent: RideEvent, completion: @escaping ((_ success: Bool) -> Void) = { _ in }) {
         
-        guard var currentUser = UserController.shared.currentUser, let recordID = rideEvent.cloudKitRecordID else { return }
+        guard var currentUser = UserController.shared.currentUser else { return }
+        let rideRecord = CKRecord(rideEvent: rideEvent)
         
-        let rideReference = CKReference(recordID: recordID, action: .deleteSelf)
-        
+        let rideReference = CKReference(record: rideRecord, action: .none)
         currentUser.attendingRides.append(rideReference)
         let userRecord = CKRecord(user: currentUser)
         
-        self.cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
+        cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
             if let error = error {
-                NSLog("error joining ride event from user controller \(error.localizedDescription)")
-                return 
+                NSLog("error joining ride when creating it, from ride even controller \(error.localizedDescription)")
+                return completion(false)
             }
+            completion(true)
         }
     }
 }

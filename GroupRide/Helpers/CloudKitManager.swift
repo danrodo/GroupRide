@@ -6,7 +6,7 @@
 //  Copyright © 2017 Daniel Rodosky. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CloudKit
 
 class CloudKitManager {
@@ -93,6 +93,65 @@ class CloudKitManager {
         }
         
         publicDatabase.add(operation)
+    }
+    
+    // MARK: - CloudKit Permissions
+    
+    func checkCloudKitAvailability(completion: @escaping (_ success: Bool) -> Void = { _ in }) {
+        
+        CKContainer.default().accountStatus() {
+            (accountStatus:CKAccountStatus, error:Error?) -> Void in
+            
+            switch accountStatus {
+            case .available:
+                print("CloudKit available. Initializing full sync.")
+                completion(true)
+                return
+            default:
+                self.handleCloudKitUnavailable(accountStatus, error: error)
+                completion(false)
+            }
+        }
+    }
+    
+    
+    func handleCloudKitUnavailable(_ accountStatus: CKAccountStatus, error:Error?) {
+        
+        var errorText = "Synchronization is disabled\n"
+        if let error = error {
+            print("handleCloudKitUnavailable ERROR: \(error)")
+            print("An error occured: \(error.localizedDescription)")
+            errorText += error.localizedDescription
+        }
+        
+        switch accountStatus {
+        case .restricted:
+            errorText += "iCloud is not available due to restrictions"
+        case .noAccount:
+            errorText += "There is no CloudKit account setup.\nYou can setup iCloud in the Settings app."
+        default:
+            break
+        }
+        
+        displayCloudKitNotAvailableError(errorText)
+    }
+    
+    func displayCloudKitNotAvailableError(_ errorText: String) {
+        
+        DispatchQueue.main.async(execute: {
+            
+            let alertController = UIAlertController(title: "iCloud Synchronization Error", message: errorText, preferredStyle: .alert)
+            
+            let dismissAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil);
+            
+            alertController.addAction(dismissAction)
+            
+            if let appDelegate = UIApplication.shared.delegate,
+                let appWindow = appDelegate.window!,
+                let rootViewController = appWindow.rootViewController {
+                rootViewController.present(alertController, animated: true, completion: nil)
+            }
+        })
     }
     
 }
