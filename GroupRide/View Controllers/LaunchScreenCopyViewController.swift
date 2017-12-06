@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class LaunchScreenCopyViewController: UIViewController {
     
@@ -24,7 +25,7 @@ class LaunchScreenCopyViewController: UIViewController {
         
         cloudKitManager.checkCloudKitAvailability { (success) in
             if !success {
-                NSLog("Could not check cloudKit availability")
+                NSLog("iCloud not available on this device")
                 return
             }
             self.checkForCurrentUser { (success) in
@@ -38,7 +39,6 @@ class LaunchScreenCopyViewController: UIViewController {
                 }
             }
         }
-        
     }
     
     // MARK: - Private functions
@@ -50,3 +50,17 @@ class LaunchScreenCopyViewController: UIViewController {
         })
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

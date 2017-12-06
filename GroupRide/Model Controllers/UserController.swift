@@ -117,8 +117,9 @@ class UserController {
         let rideRecord = CKRecord(rideEvent: rideEvent)
         
         let rideReference = CKReference(record: rideRecord, action: .none)
-        currentUser.attendingRides.append(rideReference)
-        let userRecord = CKRecord(user: currentUser)
+//        currentUser.attendingRides.append(rideReference)
+        UserController.shared.currentUser?.attendingRides.append(rideReference)
+        let userRecord = CKRecord(user: UserController.shared.currentUser!)
         
         cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
             if let error = error {

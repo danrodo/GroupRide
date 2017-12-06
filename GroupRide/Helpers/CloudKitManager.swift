@@ -64,7 +64,7 @@ class CloudKitManager {
         
         var recordIDs: [CKRecordID] = []
         guard let rideList = RideEventController.shared.rideList else { return }
-        _ = rideList.flatMap({ recordIDs.append($0.userRef.recordID) })
+        recordIDs = rideList.flatMap({ $0.userRef.recordID })
         
         let fetchOperation = CKFetchRecordsOperation(recordIDs: recordIDs)
         fetchOperation.fetchRecordsCompletionBlock = { (recordsByRecordID, error) in
@@ -104,7 +104,6 @@ class CloudKitManager {
             
             switch accountStatus {
             case .available:
-                print("CloudKit available. Initializing full sync.")
                 completion(true)
                 return
             default:
@@ -117,9 +116,8 @@ class CloudKitManager {
     
     func handleCloudKitUnavailable(_ accountStatus: CKAccountStatus, error:Error?) {
         
-        var errorText = "Synchronization is disabled\n"
+        var errorText = ""
         if let error = error {
-            print("handleCloudKitUnavailable ERROR: \(error)")
             print("An error occured: \(error.localizedDescription)")
             errorText += error.localizedDescription
         }
@@ -128,7 +126,7 @@ class CloudKitManager {
         case .restricted:
             errorText += "iCloud is not available due to restrictions"
         case .noAccount:
-            errorText += "There is no CloudKit account setup.\nYou can setup iCloud in the Settings app."
+            errorText += "You need to enable iCloud to use this app. Click the link below to go to your settings where you can sign in and/ or enable iCloud."
         default:
             break
         }
@@ -140,11 +138,21 @@ class CloudKitManager {
         
         DispatchQueue.main.async(execute: {
             
-            let alertController = UIAlertController(title: "iCloud Synchronization Error", message: errorText, preferredStyle: .alert)
+            let alertController = UIAlertController(title: "iCloud Error", message: errorText, preferredStyle: .alert)
+                        
+            let settingsAction = UIAlertAction(title: "Go to Settings", style: .default) { (_) -> Void in
+                guard let settingsUrl = URL(string: "App-Prefs:root=General") else {
+                    return
+                }
+                
+                if UIApplication.shared.canOpenURL(settingsUrl) {
+                    UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                        print("Settings opened: \(success)") 
+                    })
+                }
+            }
             
-            let dismissAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil);
-            
-            alertController.addAction(dismissAction)
+            alertController.addAction(settingsAction)
             
             if let appDelegate = UIApplication.shared.delegate,
                 let appWindow = appDelegate.window!,
@@ -153,7 +161,6 @@ class CloudKitManager {
             }
         })
     }
-    
 }
 
 

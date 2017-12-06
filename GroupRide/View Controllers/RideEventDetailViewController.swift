@@ -29,6 +29,12 @@ class RideEventDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        updateViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
         guard let rideEvent = rideEvent, let user = UserController.shared.currentUser else { return }
         
         UserController.shared.fetchUsersAttending(rideEvent: rideEvent) { (users, success) in
@@ -42,12 +48,12 @@ class RideEventDetailViewController: UIViewController {
         if rideEvent.userRef.recordID == user.cloudKitRecordID {
             // turn off join ride button
             joinRideButton.isEnabled = false
+            joinRideButton.backgroundColor = UIColor.red
         } else {
             // turn on join ride button
             joinRideButton.isEnabled = true
+            
         }
-        
-        updateViews()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -93,8 +99,17 @@ class RideEventDetailViewController: UIViewController {
         firstNameLabel.text = user.firstName
         lastNameLabel.text = user.lastName
         locationLabel.text = rideEvent.location
-        dateLabel.text = rideEvent.date.description
+        
         descriptionLabel.text = rideEvent.description
+        
+        DateFormatHelper.shared.formatDate(date: rideEvent.date.description) { (success, newDate) in
+            if !success {
+                return
+            }
+            DispatchQueue.main.async {
+                self.dateLabel.text = newDate
+            }
+        }
         
     }
 }

@@ -8,8 +8,9 @@
 
 import UIKit
 
-class NewRideEventViewController: UIViewController, UITextViewDelegate {
+class NewRideEventViewController: UITableViewController, UITextViewDelegate {
     
+    var location = ""
     
     // MARK: - Properties
     
@@ -46,18 +47,28 @@ class NewRideEventViewController: UIViewController, UITextViewDelegate {
         datePicker.minimumDate = Date()
         descriptionTextArea.layer.cornerRadius = 10
         
+        locationTextField.text = location
         
-        // create notification observers for when keyboard is shown and when it is dismissed
-        // to adjust constraints
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: .UIKeyboardWillShow, object: nil)
-        nc.addObserver(self, selector: #selector(keyboardWillHide(_ :)), name: .UIKeyboardWillHide, object: nil)
+        locationTextField.isEnabled = false 
+        
+        // Set up tap gesture to dismiss keyboard
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
+        tapGesture.cancelsTouchesInView = false
+        
+    }
+    
+    @objc func hideKeyboard() {
+        view.endEditing(true)
     }
     
     // MARK: - TextView delegate funcs 
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.text = ""
+        if textView.text == "Enter description here..." {
+            textView.text = ""
+        }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -66,45 +77,5 @@ class NewRideEventViewController: UIViewController, UITextViewDelegate {
         }
     }
 
-    // MARK: - Handle keyboard interaction
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
-            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
-        
-        
-        self.view.layoutIfNeeded()
-        self.saveButtonToTextAreaConstraint.constant = 25.0
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(animationDuration)
-        UIView.setAnimationCurve(animationCurve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        
-        self.view.layoutIfNeeded()
-        UIView.commitAnimations()
-        
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-        guard let userInfo = notification.userInfo,
-            let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-            let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
-            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
-        
-        
-        self.view.layoutIfNeeded()
-        self.saveButtonToTextAreaConstraint.constant = 45.0
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(animationDuration)
-        UIView.setAnimationCurve(animationCurve)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        
-        self.view.layoutIfNeeded()
-        UIView.commitAnimations()
-        
-        
-    }
 
 }

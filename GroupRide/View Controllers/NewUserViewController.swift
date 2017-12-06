@@ -11,7 +11,12 @@ import CloudKit
 
 class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    var keyboardHeight: CGFloat = 0
+    var imageViewHeight: CGFloat = 0
+    var textFieldsSpacing: CGFloat = 0.0
+    
     // MARK: - Properties
+    
     let picker = UIImagePickerController()
     
     var profilePicture = UIImage()
@@ -23,36 +28,20 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     @IBOutlet weak var selectPhotoButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     
-    @IBOutlet weak var saveButtonTopSpaceCOnstraint: NSLayoutConstraint!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var blockActionView: UIView!
     
+    @IBOutlet weak var viewToBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var lastNameToFirstNameConstraint: NSLayoutConstraint!
+    @IBOutlet weak var imageViewToTopConstraint: NSLayoutConstraint!
+    
     // MARK: - View Controller life cycle functions
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        blockActionView.isHidden = true
-        
-        saveButton.isEnabled = true
-        activityIndicator.isHidden = true
-        
-        // textField setup
-        firstNameTextField.delegate = self
-        lastNameTextField.delegate = self
-        
-        firstNameTextField.layer.cornerRadius = 15
-        lastNameTextField.layer.cornerRadius = 15
-        
-        // ImagePicker settup
-        picker.delegate = self
-        
-        // create notification observers for when keyboard is shown and when it is dismissed
-        // to adjust constraints
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: .UIKeyboardWillShow, object: nil)
-        nc.addObserver(self, selector: #selector(keyboardWillHide(_ :)), name: .UIKeyboardWillHide, object: nil)
-        
+        setUpView()
+
     }
     
     // MARK: - Actions
@@ -75,7 +64,7 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
             return
         }
         
-        if profilePictureImageView.image != #imageLiteral(resourceName: "bike_icon") {
+        if profilePictureImageView.image != nil {
             profilePicture = profilePictureImageView.image!
         } else {
             profilePicture = #imageLiteral(resourceName: "bike_icon")
@@ -158,7 +147,9 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     // MARK: - UITextField delegate functions
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = ""
+        if textField.text == "Enter first name here..." || textField.text == "Enter last name here..." {
+            textField.text = ""
+        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -187,17 +178,28 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
     
     // MARK: - Handle keyboard interaction
     
+    @objc func hideKeyboard() {
+        view.endEditing(true)
+    }
+    
     // FIXME: - implement
     
     @objc func keyboardWillShow(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
             let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
             let animationCurveRaw = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? Int,
-            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw) else { return }
+            let animationCurve = UIViewAnimationCurve(rawValue: animationCurveRaw),
+            let keyboardSize = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
-       
+        if keyboardSize.height != 0 {
+            self.keyboardHeight = keyboardSize.height
+        }
+        
         self.view.layoutIfNeeded()
-        self.saveButtonTopSpaceCOnstraint.constant = 40.0
+        self.viewToBottomConstraint.constant += self.keyboardHeight
+        
+        self.imageViewToTopConstraint.constant -= self.imageViewHeight
+        
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(animationDuration)
         UIView.setAnimationCurve(animationCurve)
@@ -216,7 +218,10 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         
         
         self.view.layoutIfNeeded()
-        self.saveButtonTopSpaceCOnstraint.constant = 90.0
+        self.viewToBottomConstraint.constant = 0
+        
+        self.imageViewToTopConstraint.constant = 30
+        
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(animationDuration)
         UIView.setAnimationCurve(animationCurve)
@@ -225,9 +230,40 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
         self.view.layoutIfNeeded()
         UIView.commitAnimations()
         
-
+        
     }
-
+    
+    func setUpView() {
+        imageViewHeight = profilePictureImageView.frame.height
+        textFieldsSpacing = lastNameToFirstNameConstraint.constant
+        
+        // Set up tap gesture to dismiss keyboard
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
+        tapGesture.cancelsTouchesInView = false
+        
+        blockActionView.isHidden = true
+        
+        saveButton.isEnabled = true
+        activityIndicator.isHidden = true
+        
+        // textField setup
+        firstNameTextField.delegate = self
+        lastNameTextField.delegate = self
+        
+        firstNameTextField.layer.cornerRadius = 15
+        lastNameTextField.layer.cornerRadius = 15
+        
+        // ImagePicker settup
+        picker.delegate = self
+        
+        // create notification observers for when keyboard is shown and when it is dismissed
+        // to adjust constraints
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(keyboardWillShow(_ :)), name: .UIKeyboardWillShow, object: nil)
+        nc.addObserver(self, selector: #selector(keyboardWillHide(_ :)), name: .UIKeyboardWillHide, object: nil)
+    }
 }
 
 

@@ -58,7 +58,11 @@ class RideEventController {
                 NSLog("Error creating a ride event and saving it to store. \(error.localizedDescription)")
                 return
             }
-            self.rideList?.insert(rideEvent, at: 0)
+            guard let newEvent = RideEvent(cloudKitRecord: record) else {
+                return
+            }
+            self.rideList?.insert(newEvent, at: 0)
+            UserController.shared.join(rideEvent: newEvent)
         }
     }
     

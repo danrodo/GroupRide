@@ -12,6 +12,8 @@ import CoreLocation
 
 class FeedTableViewController: UITableViewController, CLLocationManagerDelegate {
     
+    private let refreshViews = UIRefreshControl()
+    
     // MARK: - Properties
     
     @IBOutlet weak var firstNameLabel: UILabel!
@@ -54,7 +56,11 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
         guard let rides = RideEventController.shared.rideList else { return RideTableViewCell() }
         let ride = rides[indexPath.row]
         
-//        guard let currentUser = UserController.shared.currentUser else { return RideTableViewCell() }
+        guard let currentUser = UserController.shared.currentUser else { return RideTableViewCell() }
+        
+        let users = RideEventController.shared.userDict
+        guard let user = users[ride.userRef.recordID] else { return RideTableViewCell() }
+        
         
         cell.rideEvent = ride
 
@@ -81,14 +87,29 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
             destinationVC.user = user
         }
         
+        if segue.identifier == "feedToNewRideEvent" {
+            
+            guard let destinationVC = segue.destination as? NewRideEventViewController else { return }
+            destinationVC.location = self.userLocation
+            
+        }
     }
     
     func setUpViews() {
         NotificationCenter.default.addObserver(self, selector: #selector(ridesWereSet), name: RideEventKeys.rideEventFeedWasSetNotification, object: nil)
         
+        tableView.addSubview(refreshViews)
+        
+        refreshViews.addTarget(self, action: #selector(refreshRideEvents(_:)), for: .valueChanged)
+        
         firstNameLabel.text = UserController.shared.currentUser?.firstName
         lastNamelabel.text = UserController.shared.currentUser?.lastName
+        locationLabel.text = userLocation
         profilePictureImageView.image = UserController.shared.currentUser?.photo
+        
+        profilePictureImageView.layer.cornerRadius = 15.0
+        profilePictureImageView.layer.masksToBounds = true
+        
         
         self.locationLabel.text = self.userLocation
         
@@ -99,6 +120,19 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
     }
     
     // MARK: - Private helper funcs
+    
+    @objc private func refreshRideEvents(_ sender: Any) {
+        RideEventController.shared.refreshData { (error) in
+            if let error = error {
+                NSLog("Error refreshing ride events, \(error.localizedDescription)")
+                return
+            }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+                self.refreshViews.endRefreshing()
+            }
+        }
+    }
     
     @objc func ridesWereSet() {
         DispatchQueue.main.async {
