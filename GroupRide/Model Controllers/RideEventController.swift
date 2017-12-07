@@ -42,7 +42,6 @@ class RideEventController {
         
         let rideRef = CKReference(record: record, action: .none)
         currentUser.attendingRides.append(rideRef)
-        
         let userRecord = CKRecord(user: currentUser)
         
         cloudKitManager.modifyRecords([userRecord], perRecordCompletion: nil) { (record, error) in
@@ -62,7 +61,7 @@ class RideEventController {
             guard let newEvent = RideEvent(cloudKitRecord: record) else {
                 return
             }
-            RideEventController.shared.rideList?.append(newEvent)
+            self.rideList?.insert(newEvent, at: 0)
             UserController.shared.join(rideEvent: newEvent)
         }
     }

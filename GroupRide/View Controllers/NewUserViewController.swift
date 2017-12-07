@@ -106,7 +106,6 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIImagePicke
             self.picker.allowsEditing = false
             self.picker.sourceType = .camera
             self.picker.cameraCaptureMode = .photo
-            self.present(self.picker, animated: true, completion: nil)
         }
         
         let photoLibraryAction = UIAlertAction(title: "Library.", style: .default) { (photoLibrary) in
