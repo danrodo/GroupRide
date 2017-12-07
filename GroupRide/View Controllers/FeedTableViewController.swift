@@ -25,17 +25,18 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
         super.viewDidLoad()
         
         setUpViews()
-    }
+        
+            }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        tableView.reloadData()
-//        RideEventController.shared.refreshData { (_) in
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
-//        }
+
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        
+
     }
 
     // MARK: - Table view data source
@@ -46,7 +47,9 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let rides = RideEventController.shared.rideList else { return 0 }
-        return rides.count
+        let currentDate = Date()
+        let filteredRides = rides.filter({$0.date > currentDate})
+        return filteredRides.count
     }
 
 
@@ -54,13 +57,12 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "rideCell", for: indexPath) as? RideTableViewCell else { return RideTableViewCell() }
 
         guard let rides = RideEventController.shared.rideList else { return RideTableViewCell() }
-        let ride = rides[indexPath.row]
         
-        guard let currentUser = UserController.shared.currentUser else { return RideTableViewCell() }
+        let currentDate = Date()
         
-        let users = RideEventController.shared.userDict
-        guard let user = users[ride.userRef.recordID] else { return RideTableViewCell() }
+        let filteredRides = rides.filter({$0.date > currentDate})
         
+        let ride = filteredRides[indexPath.row]
         
         cell.rideEvent = ride
 
@@ -78,7 +80,11 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
             guard let indexPath = tableView.indexPathForSelectedRow else { return }
             
             guard let rideEvents = RideEventController.shared.rideList else { return }
-            let rideEvent = rideEvents[indexPath.row]
+            
+            let currentDate = Date()
+            let filteredRides = rideEvents.filter({$0.date > currentDate})
+            
+            let rideEvent = filteredRides[indexPath.row]
             
             guard let user = RideEventController.shared.userDict[rideEvent.userRef.recordID] else { return }
             guard let destinationVC = segue.destination as? RideEventDetailViewController else { return }
@@ -92,6 +98,11 @@ class FeedTableViewController: UITableViewController, CLLocationManagerDelegate 
             guard let destinationVC = segue.destination as? NewRideEventViewController else { return }
             destinationVC.location = self.userLocation
             
+        }
+        
+        if segue.identifier == "feedToProfileSegue" {
+            guard let destinatioinVC = segue.destination as? UserProfileViewController else { return }
+            destinatioinVC.location = self.locationLabel.text
         }
     }
     

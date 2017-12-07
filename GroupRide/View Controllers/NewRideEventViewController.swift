@@ -26,15 +26,23 @@ class NewRideEventViewController: UITableViewController, UITextViewDelegate {
         
         guard let location = locationTextField.text, let description = descriptionTextArea.text else { return }
         let date = datePicker.date
+        let currentDate = Date()
         
-        RideEventController.shared.create(location: location, date: date, description: description) { (error) in
-            if let error = error {
-                NSLog("error saving ride event to store \(error.localizedDescription)")
-                return
+        if date > currentDate {
+            
+            RideEventController.shared.create(location: location, date: date, description: description) { (error) in
+                if let error = error {
+                    NSLog("error saving ride event to store \(error.localizedDescription)")
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+                
             }
-            DispatchQueue.main.async {
-                self.navigationController?.popViewController(animated: true)
-            }
+        } else {
+            // Presetn alert here to tell user not to make a event with the current date or sooner
+            
         }
     }
     

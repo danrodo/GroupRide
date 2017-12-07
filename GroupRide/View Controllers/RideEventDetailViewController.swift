@@ -17,6 +17,7 @@ class RideEventDetailViewController: UIViewController {
     
     // MARK: - Properties
     
+    
     @IBOutlet weak var profilePictureImageView: UIImageView!
     @IBOutlet weak var firstNameLabel: UILabel!
     @IBOutlet weak var lastNameLabel: UILabel!
@@ -25,6 +26,7 @@ class RideEventDetailViewController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     
     @IBOutlet weak var joinRideButton: UIButton!
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,22 +45,25 @@ class RideEventDetailViewController: UIViewController {
             } else {
                 self.attendingUsers = [User]()
             }
-        }
-        
-        if rideEvent.userRef.recordID == user.cloudKitRecordID {
-            // turn off join ride button
-            joinRideButton.isEnabled = false
-            joinRideButton.backgroundColor = UIColor.red
-        } else {
-            // turn on join ride button
-            joinRideButton.isEnabled = true
+            guard let user = self.user else { return }
             
+            let tempRecordID = users?.filter({ $0.cloudKitRecordID == UserController.shared.currentUser?.cloudKitRecordID  }).first
+            
+            DispatchQueue.main.async {
+                if tempRecordID?.cloudKitRecordID == UserController.shared.currentUser?.cloudKitRecordID {
+                    self.joinRideButton.isEnabled = false
+                    self.joinRideButton.backgroundColor = UIColor.red
+                } else {
+                    // turn on join ride button
+                    self.joinRideButton.isEnabled = true
+                    
+                }
+            }
         }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        joinRideButton.isEnabled = true
     }
     
     // MARK: - Actions
@@ -93,7 +98,11 @@ class RideEventDetailViewController: UIViewController {
     
     func updateViews() {
         
-        guard let rideEvent = rideEvent, let user = user else { return }
+        guard let rideEvent = rideEvent else { return }
+        
+        let userRef = rideEvent.userRef
+        let users = RideEventController.shared.userDict
+        guard let user = users[userRef.recordID] else { return }
         
         profilePictureImageView.image = user.photo
         firstNameLabel.text = user.firstName

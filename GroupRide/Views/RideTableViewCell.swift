@@ -24,6 +24,15 @@ class RideTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    let isAttendingImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = #imageLiteral(resourceName: "isAttendingIcon")
+        imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 0
+        imageView.layer.masksToBounds = true
+        return imageView
+    }()
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
@@ -40,7 +49,7 @@ class RideTableViewCell: UITableViewCell {
     let dateLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textAlignment = .left
+        label.textAlignment = .right
         return label
     }()
     
@@ -48,15 +57,45 @@ class RideTableViewCell: UITableViewCell {
     func updateViews() {
         
         self.backgroundColor = UIColor(white: 255.0/255.0, alpha: 0.5)
-        guard let location = rideEvent?.location, let date = rideEvent?.date, let userRef = rideEvent?.userRef else { return }
+        guard let rideEvent = rideEvent else { return }
+        let location = rideEvent.location
+        let date = rideEvent.date
+        let userRef = rideEvent.userRef
         
         let users = RideEventController.shared.userDict
         guard let user = users[userRef.recordID] else { return }
         
+        var isAttending = false
+        
+        
+        UserController.shared.fetchUsersAttending(rideEvent: rideEvent) { (users, success) in
+            if !success {
+                NSLog("Error fetching users atteding a ride")
+                return
+            }
+            
+            guard let users = users else {
+                return
+            }
+            
+            guard let tempUser = users.filter({ $0.cloudKitRecordID == UserController.shared.currentUser?.cloudKitRecordID }).first else {
+                isAttending = false 
+                DispatchQueue.main.async {
+                    self.setUpContainerView(user: user, date: date.description, location: location, isAttending: isAttending)
+                }
+                return
+            }
+            
+            if tempUser.cloudKitRecordID == UserController.shared.currentUser?.cloudKitRecordID {
+                isAttending = true
+            }
+            DispatchQueue.main.async {
+                self.setUpContainerView(user: user, date: date.description, location: location, isAttending: isAttending)
+            }
+        }
+        
         addSubview(profileImageView)
-        
-        setUpContainerView(user: user, date: date.description, location: location)
-        
+
         profileImageView.image = user.photo
                 
         addConstraintsWithFormat(format: "H:|-12-[v0(68)]", views: profileImageView)
@@ -66,7 +105,7 @@ class RideTableViewCell: UITableViewCell {
         
     }
     
-    private func setUpContainerView(user: User, date: String, location: String) {
+    private func setUpContainerView(user: User, date: String, location: String, isAttending: Bool) {
         
         let containerView = UIView()
 //        containerView.backgroundColor = UIColor.red
@@ -81,6 +120,9 @@ class RideTableViewCell: UITableViewCell {
         containerView.addSubview(dateLabel)
         containerView.addSubview(locationLabel)
         
+        
+        
+        
         DateFormatHelper.shared.formatDate(date: date.description, completion: { (success, date) in
             if !success {
                 NSLog("error formating date string")
@@ -92,14 +134,28 @@ class RideTableViewCell: UITableViewCell {
                 self.locationLabel.text = location
             }
         })
-
-        containerView.addConstraintsWithFormat(format: "H:|[v0][v1(110)]-12-|", views: nameLabel, dateLabel)
-        containerView.addConstraintsWithFormat(format: "V:|[v0][v1(24)]|", views: nameLabel, locationLabel)
         
-        containerView.addConstraintsWithFormat(format: "H:|[v0]-12-|", views: locationLabel)
+        if isAttending == true {
+            containerView.addSubview(isAttendingImageView)
+            
         
-        containerView.addConstraintsWithFormat(format: "V:|[v0(20)]", views: dateLabel)
+            containerView.addConstraintsWithFormat(format: "H:|[v0][v1(110)]-12-|", views: nameLabel, dateLabel)
+            containerView.addConstraintsWithFormat(format: "V:|[v0][v1(24)]|", views: nameLabel, locationLabel)
+            
+            containerView.addConstraintsWithFormat(format: "H:|[v0]-8-[v1(20)]-12-|", views: locationLabel, isAttendingImageView)
+            
+            containerView.addConstraintsWithFormat(format: "V:|[v0(24)]", views: dateLabel)
+            containerView.addConstraintsWithFormat(format: "V:[v0(20)]|", views: isAttendingImageView)
+            
         
+        } else {
+            containerView.addConstraintsWithFormat(format: "H:|[v0][v1(110)]-12-|", views: nameLabel, dateLabel)
+            containerView.addConstraintsWithFormat(format: "V:|[v0][v1(24)]|", views: nameLabel, locationLabel)
+            
+            containerView.addConstraintsWithFormat(format: "H:|[v0]-12-|", views: locationLabel)
+            
+            containerView.addConstraintsWithFormat(format: "V:|[v0(24)]", views: dateLabel)
+        }
     }
     
 

@@ -27,27 +27,21 @@ class LaunchScreenCopyViewController: UIViewController {
             if !success {
                 NSLog("iCloud not available on this device")
                 return
-            }
-            self.checkForCurrentUser { (success) in
-                DispatchQueue.main.async {
+            } else {
+                UserController.shared.fetchCurrentUser(completion: { (success) in
                     if !success {
-                        appDelegate.window?.rootViewController = initialViewController
+                        DispatchQueue.main.async {
+                            appDelegate.window?.rootViewController = initialViewController
+                        }
                     } else {
                         RideEventController.shared.refreshData()
-                        appDelegate.window?.rootViewController = feedTableViewController
+                        DispatchQueue.main.async {
+                            appDelegate.window?.rootViewController = feedTableViewController
+                        }
                     }
-                }
+                })
             }
         }
-    }
-    
-    // MARK: - Private functions
-    
-    func checkForCurrentUser(completion: @escaping (Bool) -> Void) {
-        
-        let _ = UserController.shared.fetchCurrentUser(completion: { (success) in
-            completion(success)
-        })
     }
 }
 
